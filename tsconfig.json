@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "noUnusedLocals": true,
+        "sourceMap": true,
+        "module": "commonjs",
+        "target": "esnext",
+        "lib": ["esnext"],
+        "outDir": "dist/",
+        "baseUrl": "./",
+        "paths": {
+            "~/*": ["./*"]
+        },
+    },
+    "files": [
+        "./node_modules/@types/node/index.d.ts",
+    ],
+    "include": [
+        "src/**/*.ts",
+    ],
+    "exclude": [
+        "node_modules",
+        "dist/",
+    ]
+  }
