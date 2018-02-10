@@ -9,8 +9,14 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
+    const image = {
+        imageId: req.body.imageId,
+        name: req.body.name,
+    };
+
     res.status(201).json({
         message: 'Handling POST requests to /api/images.',
+        storedImage: image,
     });
 });
 
