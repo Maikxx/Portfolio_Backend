@@ -10,7 +10,6 @@ const port = '3000';
 
 // This creates the server, via the http package.
 const startup = async () => {
-    console.log('Starting the http server');
     const app = express();
 
     app.use('/api/images', imageRoutes);
@@ -24,7 +23,6 @@ startup()
     .then(() => {
         const baseUrl = `http://localhost:3000`;
         console.log(`API Endpoint: ${baseUrl}/api/`);
-        console.log(`Go ahead and use, use, use!`);
     })
     .catch((error) => {
         console.log(error.stack);
