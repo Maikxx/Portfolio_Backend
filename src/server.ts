@@ -14,6 +14,21 @@ const startup = async () => {
 
     app.use('/api/images', imageRoutes);
 
+    app.use((req, res, next) => {
+        const error = new Error('Route not found!');
+        error.name = 'RouteError';
+        next(error);
+    });
+
+    app.use((error, req, res, next) => {
+        res.status(error.status || 500);
+        res.json({
+            error: {
+                message: error.message,
+            },
+        });
+    });
+
     await listen(app, {
         port: parseInt(port, 10),
     });
