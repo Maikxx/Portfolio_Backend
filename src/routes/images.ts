@@ -5,10 +5,12 @@ const Image = require('../models/image');
 
 const router = express.Router();
 
-function setErrorJSON (error) {
-    return {
+function onError (response, error) {
+    console.log(error);
+
+    response.status(500).json({
         error: error,
-    };
+    });
 }
 
 // Create a new image with the name, description and location that are passed in via the request.
@@ -29,11 +31,7 @@ router.post('/', (req, res, next) => {
                 storedImage: image,
             });
         })
-        .catch(error => {
-            console.log(error);
-
-            res.status(500).json(setErrorJSON(error));
-        });
+        .catch(error => onError(res, error));
 });
 
 // Get all the Images from the database.
@@ -44,10 +42,7 @@ router.get('/', (req, res, next) => {
             console.log(docs);
             res.status(200).json(docs);
         })
-        .catch(error => {
-            console.log(error);
-            res.status(500).json(setErrorJSON(error));
-        });
+        .catch(error => onError(res, error));
 });
 
 // Get the Image by passing the id into the URL.
@@ -68,10 +63,7 @@ router.get('/:imageId', (req, res, next) => {
                 });
             }
         })
-        .catch(error => {
-            console.log(error);
-            res.status(500).json(setErrorJSON(error));
-        });
+        .catch(error => onError(res, error));
 });
 
 // Update a single image handling route.
@@ -89,12 +81,7 @@ router.patch('/:imageId', (req, res, next) => {
         console.log(result);
         res.status(200).json(result);
     })
-    .catch(error => {
-        console.log(error);
-        res.status(500).json({
-            error: error,
-        });
-    });
+    .catch(error => onError(res, error));
 });
 
 // Delete all database logs of type Image.
@@ -104,11 +91,7 @@ router.delete('/', (req, res, next) => {
         .then(result => {
             res.status(200).json(result);
         })
-        .catch(error => {
-            console.log(error);
-
-            res.status(500).json(setErrorJSON(error));
-        });
+        .catch(error => onError(res, error));
 });
 
 // Delete only the Image with the id passed in to the URL.
@@ -122,10 +105,7 @@ router.delete('/:imageId', (req, res, next) => {
         .then(result => {
             res.status(200).json(result);
         })
-        .catch(error => {
-            console.log(error);
-            res.status(500).json(setErrorJSON(error));
-        });
+        .catch(error => onError(res, error));
 });
 
 export default router;
