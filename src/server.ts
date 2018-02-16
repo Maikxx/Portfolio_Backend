@@ -63,7 +63,7 @@ const startup = async () => {
 
 startup()
     .then(() => {
-        const baseUrl = `http://localhost:${port}`;
+        const baseUrl = `${process.env.BASE_URL}${port}`;
         console.log(`API Endpoint: ${baseUrl}/api/`);
     })
     .catch((error) => {
