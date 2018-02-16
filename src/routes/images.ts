@@ -5,14 +5,6 @@ const Image = require('../models/image');
 
 const router = express.Router();
 
-function onError (response, error) {
-    console.log(error);
-
-    response.status(500).json({
-        error: error,
-    });
-}
-
 // Create a new image with the name, description and location that are passed in via the request.
 router.post('/', (req, res, next) => {
     const image = new Image({
@@ -21,6 +13,8 @@ router.post('/', (req, res, next) => {
         description: req.body.description,
         location: req.body.location,
     });
+
+    const serverURL = `${req.protocol}${req.get('host')}`;
 
     image.save()
         .then(result => {
@@ -34,7 +28,7 @@ router.post('/', (req, res, next) => {
                     requestThis: {
                         type: 'GET',
                         description: 'Get the last saved image via this request.',
-                        url: `${process.env.URL}${process.env.PORT}/images/${result._id}`,
+                        url: getSingleImageUrl(serverURL, result),
                     },
                 },
             });
@@ -45,6 +39,8 @@ router.post('/', (req, res, next) => {
 // Get all the Images from the database.
 // Select does what it describes, it selects items to return in the response of the find.
 router.get('/', (req, res, next) => {
+    const serverURL = `${req.protocol}${req.get('host')}`;
+
     Image.find()
         .select('name description location')
         .exec()
@@ -59,7 +55,7 @@ router.get('/', (req, res, next) => {
                         location: result.location,
                         requestUsed: {
                             type: 'GET',
-                            url: `${process.env.URL}${process.env.PORT}/images/${result._id}`,
+                            url: getSingleImageUrl(serverURL, result),
                         },
                     };
                 }),
@@ -73,6 +69,7 @@ router.get('/', (req, res, next) => {
 // Get a single Image by passing the id into the URL.
 router.get('/:imageId', (req, res, next) => {
     const imageId = req.params.imageId;
+    const serverURL = `${req.protocol}${req.get('host')}`;
 
     Image.findById(imageId)
         .exec()
@@ -90,7 +87,7 @@ router.get('/:imageId', (req, res, next) => {
                         location: result.location,
                         requestUsed: {
                             type: 'GET',
-                            url: `${process.env.URL}${process.env.PORT}/images/${result._id}`,
+                            url: getSingleImageUrl(serverURL, result),
                         },
                     },
                 });
@@ -106,6 +103,7 @@ router.get('/:imageId', (req, res, next) => {
 router.patch('/:imageId', (req, res, next) => {
     const imageId = req.params.imageId;
     const updateOps = {};
+    const serverURL = `${req.protocol}${req.get('host')}`;
 
     for (const ops of req.params.imageId) {
         updateOps[ops.propName] = ops.value;
@@ -122,12 +120,12 @@ router.patch('/:imageId', (req, res, next) => {
                 location: result.location,
                 requestUsed: {
                     type: 'PATCH',
-                    url: `${process.env.URL}${process.env.PORT}/images/${result._id}`,
+                    url: getSingleImageUrl(serverURL, result),
                 },
                 requestThis: {
                     type: 'GET',
                     description: 'Get the patched (changed) image via this request.',
-                    url: `${process.env.URL}${process.env.PORT}/images/${result._id}`,
+                    url: getSingleImageUrl(serverURL, result),
                 },
             },
         });
@@ -162,5 +160,17 @@ router.delete('/:imageId', (req, res, next) => {
         })
         .catch(error => onError(res, error));
 });
+
+function onError (response, error) {
+    console.log(error);
+
+    response.status(500).json({
+        error: error,
+    });
+}
+
+function getSingleImageUrl (serverURL, imageResult) {
+    return `${serverURL}/api/images/${imageResult._id}`;
+}
 
 export default router;
