@@ -135,11 +135,18 @@ router.patch('/:imageId', (req, res, next) => {
 
 // Delete all database logs of type Image.
 router.delete('/', (req, res, next) => {
+    const serverURL = `${req.protocol}${req.get('host')}`;
+
     Image.remove({})
         .exec()
         .then(result => {
             res.status(200).json({
                 message: 'Success: Deleted all items!',
+                requestAllImages: {
+                    type: 'GET',
+                    description: 'See the empty list of images.',
+                    url: getAllImages(serverURL),
+                },
             });
         })
         .catch(error => onError(res, error));
@@ -148,6 +155,7 @@ router.delete('/', (req, res, next) => {
 // Delete only the Image with the id passed in to the URL.
 router.delete('/:imageId', (req, res, next) => {
     const imageId = req.params.imageId;
+    const serverURL = `${req.protocol}${req.get('host')}`;
 
     Image.remove({
         _id: imageId,
@@ -156,6 +164,11 @@ router.delete('/:imageId', (req, res, next) => {
         .then(result => {
             res.status(200).json({
                 message: 'Success: Deleted one item!',
+                requestAllImages: {
+                    type: 'GET',
+                    description: 'See the list of images that remained after this deletion.',
+                    url: getAllImages(serverURL),
+                },
             });
         })
         .catch(error => onError(res, error));
@@ -171,6 +184,10 @@ function onError (response, error) {
 
 function getSingleImageUrl (serverURL, imageResult) {
     return `${serverURL}/api/images/${imageResult._id}`;
+}
+
+function getAllImages (serverURL) {
+    return `${serverURL}/api/images/`;
 }
 
 export default router;
