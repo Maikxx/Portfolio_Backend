@@ -14,7 +14,7 @@ router.post('/', (req, res, next) => {
         location: req.body.location,
     });
 
-    const serverURL = `${req.protocol}${req.get('host')}`;
+    const serverURL = `${req.protocol}://${req.get('host')}`;
 
     image.save()
         .then(result => {
@@ -45,7 +45,7 @@ router.get('/', (req, res, next) => {
         .select('name description location')
         .exec()
         .then(results => {
-            const response = {
+            res.status(200).json({
                 count: results.length,
                 images: results.map(result => {
                     return {
@@ -59,9 +59,7 @@ router.get('/', (req, res, next) => {
                         },
                     };
                 }),
-            };
-
-            res.status(200).json(response);
+            });
         })
         .catch(error => onError(res, error));
 });
@@ -72,7 +70,6 @@ router.get('/:imageId', (req, res, next) => {
     const serverURL = `${req.protocol}${req.get('host')}`;
 
     Image.findById(imageId)
-        .exec()
         .then(result => {
             if (!result) {
                 res.status(404).json({
@@ -110,27 +107,26 @@ router.patch('/:imageId', (req, res, next) => {
     }
 
     Image.update({ _id: imageId }, { $set: updateOps })
-    .exec()
-    .then(result => {
-        res.status(200).json({
-            patchedImage: {
-                _id: result._id,
-                name: result.name,
-                description: result.description,
-                location: result.location,
-                requestUsed: {
-                    type: 'PATCH',
-                    url: getSingleImageUrl(serverURL, result),
+        .then(result => {
+            res.status(200).json({
+                patchedImage: {
+                    _id: result._id,
+                    name: result.name,
+                    description: result.description,
+                    location: result.location,
+                    requestUsed: {
+                        type: 'PATCH',
+                        url: getSingleImageUrl(serverURL, result),
+                    },
+                    requestThisImage: {
+                        type: 'GET',
+                        description: 'Get the patched (changed) image via this request.',
+                        url: getSingleImageUrl(serverURL, result),
+                    },
                 },
-                requestThisImage: {
-                    type: 'GET',
-                    description: 'Get the patched (changed) image via this request.',
-                    url: getSingleImageUrl(serverURL, result),
-                },
-            },
-        });
-    })
-    .catch(error => onError(res, error));
+            });
+        })
+        .catch(error => onError(res, error));
 });
 
 // Delete all database logs of type Image.
