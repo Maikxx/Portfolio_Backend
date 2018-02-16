@@ -1,3 +1,8 @@
+// Immediately load the dotenv file.
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').load();
+}
+
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import * as mongoose from 'mongoose';
@@ -14,7 +19,7 @@ const port = process.env.PORT || '3000';
 // This creates the server, via the http package.
 const startup = async () => {
     // tslint:disable-next-line:ter-max-len
-    const connectionLink = `mongodb://${process.env.MONGO_ATLAS_NAME}:${process.env.MONGO_ATLAS_PW}@cluster0-shard-00-00-ipoy6.mongodb.net:27017,cluster0-shard-00-01-ipoy6.mongodb.net:27017,cluster0-shard-00-02-ipoy6.mongodb.net:27017/maikel?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin`;
+    const connectionLink = `mongodb://${process.env.MONGO_ATLAS_NAME}:${process.env.MONGO_ATLAS_PW}${process.env.MONGO_ATLAS_CLUSTER}`;
 
     mongoose.connect(connectionLink);
 
