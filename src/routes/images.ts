@@ -25,7 +25,7 @@ router.post('/', (req, res, next) => {
                     description: result.description,
                     location: result.location,
                     requestUsed: 'POST',
-                    requestThis: {
+                    requestThisImage: {
                         type: 'GET',
                         description: 'Get the last saved image via this request.',
                         url: getSingleImageUrl(serverURL, result),
@@ -122,7 +122,7 @@ router.patch('/:imageId', (req, res, next) => {
                     type: 'PATCH',
                     url: getSingleImageUrl(serverURL, result),
                 },
-                requestThis: {
+                requestThisImage: {
                     type: 'GET',
                     description: 'Get the patched (changed) image via this request.',
                     url: getSingleImageUrl(serverURL, result),
