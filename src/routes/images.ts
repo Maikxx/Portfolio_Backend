@@ -33,6 +33,7 @@ router.post('/', (req, res, next) => {
                     requestUsed: 'POST',
                     requestThis: {
                         type: 'GET',
+                        description: 'Get the last saved image via this request.',
                         url: `${process.env.URL}${process.env.PORT}/images/${result._id}`,
                     },
                 },
@@ -99,6 +100,9 @@ router.get('/:imageId', (req, res, next) => {
 });
 
 // Update a single image handling route.
+// If you want to access this, set a body of a request, with an array of objects.
+// Each object should have a propName assigned to the corresponding propName that you want to update, and a "value".
+// The value you set here is the new value for the property.
 router.patch('/:imageId', (req, res, next) => {
     const imageId = req.params.imageId;
     const updateOps = {};
@@ -122,6 +126,7 @@ router.patch('/:imageId', (req, res, next) => {
                 },
                 requestThis: {
                     type: 'GET',
+                    description: 'Get the patched (changed) image via this request.',
                     url: `${process.env.URL}${process.env.PORT}/images/${result._id}`,
                 },
             },
