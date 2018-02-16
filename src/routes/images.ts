@@ -24,42 +24,74 @@ router.post('/', (req, res, next) => {
 
     image.save()
         .then(result => {
-            console.log(result);
-
             res.status(201).json({
-                message: `Handling image POST request, with name: ${result.name}, to /api/images.`,
-                storedImage: image,
+                storedImage: {
+                    _id: result._id,
+                    name: result.name,
+                    description: result.description,
+                    location: result.location,
+                    requestUsed: 'POST',
+                    requestThis: {
+                        type: 'GET',
+                        url: `${process.env.URL}${process.env.PORT}/images/${result._id}`,
+                    },
+                },
             });
         })
         .catch(error => onError(res, error));
 });
 
 // Get all the Images from the database.
+// Select does what it describes, it selects items to return in the response of the find.
 router.get('/', (req, res, next) => {
     Image.find()
+        .select('name description location')
         .exec()
-        .then(docs => {
-            console.log(docs);
-            res.status(200).json(docs);
+        .then(results => {
+            const response = {
+                count: results.length,
+                images: results.map(result => {
+                    return {
+                        _id: result._id,
+                        name: result.name,
+                        description: result.description,
+                        location: result.location,
+                        requestUsed: {
+                            type: 'GET',
+                            url: `${process.env.URL}${process.env.PORT}/images/${result._id}`,
+                        },
+                    };
+                }),
+            };
+
+            res.status(200).json(response);
         })
         .catch(error => onError(res, error));
 });
 
-// Get the Image by passing the id into the URL.
+// Get a single Image by passing the id into the URL.
 router.get('/:imageId', (req, res, next) => {
     const imageId = req.params.imageId;
 
     Image.findById(imageId)
         .exec()
-        .then(doc => {
-            console.log(doc);
-
-            // If there is a valid document found return that, else return a not found entry.
-            if (doc) {
-                res.status(200).json(doc);
-            } else {
+        .then(result => {
+            if (!result) {
                 res.status(404).json({
                     message: 'No valid entry found for the provided ID',
+                });
+            } else {
+                res.status(200).json({
+                    storedImage: {
+                        _id: result._id,
+                        name: result.name,
+                        description: result.description,
+                        location: result.location,
+                        requestUsed: {
+                            type: 'GET',
+                            url: `${process.env.URL}${process.env.PORT}/images/${result._id}`,
+                        },
+                    },
                 });
             }
         })
@@ -78,8 +110,22 @@ router.patch('/:imageId', (req, res, next) => {
     Image.update({ _id: imageId }, { $set: updateOps })
     .exec()
     .then(result => {
-        console.log(result);
-        res.status(200).json(result);
+        res.status(200).json({
+            patchedImage: {
+                _id: result._id,
+                name: result.name,
+                description: result.description,
+                location: result.location,
+                requestUsed: {
+                    type: 'PATCH',
+                    url: `${process.env.URL}${process.env.PORT}/images/${result._id}`,
+                },
+                requestThis: {
+                    type: 'GET',
+                    url: `${process.env.URL}${process.env.PORT}/images/${result._id}`,
+                },
+            },
+        });
     })
     .catch(error => onError(res, error));
 });
@@ -89,7 +135,9 @@ router.delete('/', (req, res, next) => {
     Image.remove({})
         .exec()
         .then(result => {
-            res.status(200).json(result);
+            res.status(200).json({
+                message: 'Success: Deleted all items!',
+            });
         })
         .catch(error => onError(res, error));
 });
@@ -103,7 +151,9 @@ router.delete('/:imageId', (req, res, next) => {
     })
         .exec()
         .then(result => {
-            res.status(200).json(result);
+            res.status(200).json({
+                message: 'Success: Deleted one item!',
+            });
         })
         .catch(error => onError(res, error));
 });
