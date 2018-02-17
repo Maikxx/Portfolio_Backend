@@ -203,9 +203,7 @@ router.delete('/:imageId', (req: any, res: any, next: any) => {
     const imageId = req.params.imageId;
     const serverURL = `${req.protocol}${req.get('host')}`;
 
-    Image.remove({
-        _id: imageId,
-    })
+    Image.remove({ _id: imageId })
         .exec()
         .then(result => {
             res.status(200).json({
@@ -220,7 +218,7 @@ router.delete('/:imageId', (req: any, res: any, next: any) => {
         .catch(error => onError(res, error));
 });
 
-function onError (response, error) {
+function onError (response: any, error: any) {
     console.error(error);
 
     response.status(500).json({
@@ -228,11 +226,14 @@ function onError (response, error) {
     });
 }
 
-function getSingleImageUrl (serverURL, imageResult) {
+function getSingleImageUrl (serverURL: string, imageResult: { _id: string }) {
+    console.log(typeof serverURL);
+    console.log(typeof imageResult._id);
+
     return `${serverURL}/api/images/${imageResult._id}`;
 }
 
-function getAllImages (serverURL) {
+function getAllImages (serverURL: string) {
     return `${serverURL}/api/images/`;
 }
 
