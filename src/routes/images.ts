@@ -16,8 +16,9 @@ const storage = multer.diskStorage({
         callback(null, 'uploads/');
     },
     filename: (request: object, file: FileType, callback: any) => {
+        const fileNameToSave = file.originalname.replace(/ /g, '_');
         // tslint:disable-next-line:prefer-template
-        callback(null, new Date().toISOString() + '-' + file.originalname);
+        callback(null, new Date().toISOString() + '_' + fileNameToSave);
     },
 });
 
