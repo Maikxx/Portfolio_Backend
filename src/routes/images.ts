@@ -227,9 +227,6 @@ function onError (response: any, error: any) {
 }
 
 function getSingleImageUrl (serverURL: string, imageResult: { _id: string }) {
-    console.log(typeof serverURL);
-    console.log(typeof imageResult._id);
-
     return `${serverURL}/api/images/${imageResult._id}`;
 }
 
