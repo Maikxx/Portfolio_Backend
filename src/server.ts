@@ -30,7 +30,7 @@ const startup = async () => {
     app.use(bodyParser.urlencoded({ extended: false }));
     app.use(bodyParser.json());
 
-    app.use((req, res, next) => {
+    app.use((req: any, res: any, next: any) => {
         res.header('Access-Control-Allow-Origin', '*');
         res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
 
@@ -43,13 +43,13 @@ const startup = async () => {
 
     app.use('/api/images', imageRoutes);
 
-    app.use((req, res, next) => {
+    app.use((req: any, res: any, next: any) => {
         const error = new Error('Route not found!');
         error.name = 'RouteError';
         next(error);
     });
 
-    app.use((error, req, res, next) => {
+    app.use((error, req: any, res: any, next: any) => {
         res.status(error.status || 500);
         res.json({
             error: {
@@ -63,17 +63,18 @@ const startup = async () => {
     });
 };
 
+// Runs the startup code and listens for a promise.
 startup()
     .then(() => {
         const baseUrl = `${process.env.BASE_URL}${port}`;
         console.log(`API Endpoint: ${baseUrl}/api/`);
     })
-    .catch((error) => {
-        console.log(error.stack);
+    .catch((error: any) => {
+        console.error(error.stack);
     });
 
 // Catches all other errors.
-process.on('unhandledRejection', (r) => {
+process.on('unhandledRejection', (r: any) => {
     console.log(r);
 });
 
