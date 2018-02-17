@@ -1,17 +1,43 @@
 import * as express from 'express';
 import * as mongoose from 'mongoose';
+import * as multer from 'multer';
+
+const storage = multer.diskStorage({
+    destination: (request, file, callback) => {
+        callback(null, 'uploads/');
+    },
+    filename: (request, file, callback) => {
+        callback(null, `${new Date().toISOString} ${file.originalname}`);
+    },
+});
+
+const fileFilter = (request, file, callback) => {
+    if (file.mimetype === 'image/jpeg' ||
+        file.mimetype === 'image/jpg' ||
+        file.mimetype === 'image/png' ||
+        file.mimetype === 'image/svg+xml') {
+        callback(null, true);
+    } else {
+        callback(null, false);
+    }
+}
+
+const upload = multer({
+    storage: storage,
+    fileFilter: fileFilter,
+});
 
 const Image = require('../models/image');
-
 const router = express.Router();
 
 // Create a new image with the name, description and location that are passed in via the request.
-router.post('/', (req, res, next) => {
+router.post('/', upload.single('image'), (req, res, next) => {
     const image = new Image({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
         description: req.body.description,
         location: req.body.location,
+        image: (req as any).file.path,
     });
 
     const serverURL = `${req.protocol}://${req.get('host')}`;
@@ -24,6 +50,7 @@ router.post('/', (req, res, next) => {
                     name: result.name,
                     description: result.description,
                     location: result.location,
+                    image: result.image,
                     requestUsed: 'POST',
                     requestThisImage: {
                         type: 'GET',
@@ -42,7 +69,7 @@ router.get('/', (req, res, next) => {
     const serverURL = `${req.protocol}${req.get('host')}`;
 
     Image.find()
-        .select('name description location')
+        .select('name description location image')
         .exec()
         .then(results => {
             res.status(200).json({
@@ -53,6 +80,7 @@ router.get('/', (req, res, next) => {
                         name: result.name,
                         description: result.description,
                         location: result.location,
+                        image: result.image,
                         requestUsed: {
                             type: 'GET',
                             url: getSingleImageUrl(serverURL, result),
@@ -82,6 +110,7 @@ router.get('/:imageId', (req, res, next) => {
                         name: result.name,
                         description: result.description,
                         location: result.location,
+                        image: result.image,
                         requestUsed: {
                             type: 'GET',
                             url: getSingleImageUrl(serverURL, result),
@@ -114,6 +143,7 @@ router.patch('/:imageId', (req, res, next) => {
                     name: result.name,
                     description: result.description,
                     location: result.location,
+                    image: result.image,
                     requestUsed: {
                         type: 'PATCH',
                         url: getSingleImageUrl(serverURL, result),
