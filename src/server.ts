@@ -11,7 +11,7 @@ import { listen } from './utils/listen';
 
 import imageRoutes from './routes/images';
 
-console.log('Aloha! (Re)starting...');
+console.log('Hold your horses! I am (Re)starting...');
 
 // If there is an environment variable for the port, to run this on, use that, else use 3000.
 const port = process.env.PORT || '3000';
