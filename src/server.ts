@@ -25,6 +25,8 @@ const startup = async () => {
 
     const app = express();
 
+    // Use this route to get images by their image name.
+    app.use('/uploads', express.static('uploads'));
     app.use(bodyParser.urlencoded({ extended: false }));
     app.use(bodyParser.json());
 

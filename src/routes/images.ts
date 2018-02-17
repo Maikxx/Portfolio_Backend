@@ -7,15 +7,15 @@ const storage = multer.diskStorage({
         callback(null, 'uploads/');
     },
     filename: (request, file, callback) => {
-        callback(null, `${new Date().toISOString} ${file.originalname}`);
+        // tslint:disable-next-line:prefer-template
+        callback(null, new Date().toISOString() + '-' + file.originalname);
     },
 });
 
 const fileFilter = (request, file, callback) => {
     if (file.mimetype === 'image/jpeg' ||
         file.mimetype === 'image/jpg' ||
-        file.mimetype === 'image/png' ||
-        file.mimetype === 'image/svg+xml') {
+        file.mimetype === 'image/png') {
         callback(null, true);
     } else {
         callback(null, false);
