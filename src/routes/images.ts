@@ -171,7 +171,7 @@ router.patch('/:imageId', (req: any, res: any, next: any) => {
                     },
                     requestThisImage: {
                         type: 'GET',
-                        description: 'Get the patched (changed) image via this request.',
+                        description: 'Get the patched (changed) image via this request',
                         url: getSingleImageUrl(serverURL, result),
                     },
                 },
@@ -188,7 +188,7 @@ router.delete('/', (req: any, res: any, next: any) => {
         .exec()
         .then(result => {
             res.status(200).json({
-                message: 'Success: Deleted all items!',
+                message: 'Deleted all items',
                 requestAllImages: {
                     type: 'GET',
                     description: 'See the empty list of images.',
@@ -208,7 +208,7 @@ router.delete('/:imageId', (req: any, res: any, next: any) => {
         .exec()
         .then(result => {
             res.status(200).json({
-                message: 'Success: Deleted one item!',
+                message: 'Deleted one item',
                 requestAllImages: {
                     type: 'GET',
                     description: 'See the list of images that remained after this deletion.',

@@ -10,6 +10,7 @@ import * as mongoose from 'mongoose';
 import { listen } from './utils/listen';
 
 import imageRoutes from './routes/images';
+import userRoutes from './routes/user';
 
 console.log('Hold your horses! I am (Re)starting...');
 
@@ -42,6 +43,7 @@ const startup = async () => {
     });
 
     app.use('/api/images', imageRoutes);
+    app.use('/api/user', userRoutes);
 
     app.use((req: any, res: any, next: any) => {
         const error = new Error('Route not found!');
