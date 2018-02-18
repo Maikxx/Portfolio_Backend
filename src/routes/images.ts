@@ -53,7 +53,7 @@ const Image = require('../models/image');
 const router = express.Router();
 
 // Create a new image with the name, description and location that are passed in via the request.
-router.post('/', upload.single('image'), checkAuth, (req: any, res: any, next: any) => {
+router.post('/', checkAuth, upload.single('image'), (req: any, res: any, next: any) => {
     function calculateFileSize(size: number) {
         return size / 1000;
     }
