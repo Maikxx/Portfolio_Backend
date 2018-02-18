@@ -4,10 +4,13 @@ import * as jwt from 'jsonwebtoken';
 
 const User = require('../models/user');
 
+// This function handles the /api/user/signup route.
 export function postSignUp (req: any, res: any, next: any) {
+    // First we look for, if a user already exists, by their email account and make that a promise.
     User.find({ email: req.body.email })
         .exec()
-        .then(user => {
+        .then((user: any) => {
+            // If there is already one (or more) user give back an error.
             if (user.length >= 1) {
                 // Status 409 means we get the request, but got a conflict.
                 // Status 422 means unprocessable entity, which is pretty much the same as 409.
@@ -15,7 +18,8 @@ export function postSignUp (req: any, res: any, next: any) {
                     message: 'Mail already exists',
                 });
             } else {
-                bcrypt.hash(req.body.password, 10, (error, hash) => {
+                // Hash their password.
+                bcrypt.hash(req.body.password, 10, (error: object, hash: string) => {
                     if (error) {
                         return onError(res, error);
                     } else {
@@ -105,6 +109,7 @@ export function deleteSpecific (req: any, res: any, next: any) {
         .catch(error => onError(res, error));
 }
 
+// Function that handles errors in the above exported functions.
 function onError (response: any, error: any) {
     console.error(error);
 
