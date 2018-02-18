@@ -1,9 +1,8 @@
 import * as express from 'express';
 import * as multer from 'multer';
-
-const checkAuth = require('../auth/check-auth');
 const router = express.Router();
 
+import * as auth from '../auth/check-auth';
 import * as ImageController from '../controllers/images';
 
 interface FileType {
@@ -42,25 +41,25 @@ const upload = multer({
 });
 
 // Create a new image with the name, description and location that are passed in via the request.
-router.post('/', checkAuth, upload.single('image'), ImageController.post);
+router.post('/', auth.checkAuth, upload.single('image'), ImageController.post);
 
 // Get all the Images from the database.
 // Select does what it describes, it selects items to return in the response of the find.
-router.get('/', checkAuth, ImageController.getAll);
+router.get('/', auth.checkAuth, ImageController.getAll);
 
 // Get a single Image by passing the id into the URL.
-router.get('/:imageId', checkAuth, ImageController.getSpecific);
+router.get('/:imageId', auth.checkAuth, ImageController.getSpecific);
 
 // Update a single image handling route.
 // If you want to access this, set a body of a request, with an array of objects.
 // Each object should have a propName assigned to the corresponding propName that you want to update, and a "value".
 // The value you set here is the new value for the property.
-router.patch('/:imageId', checkAuth, ImageController.patch);
+router.patch('/:imageId', auth.checkAuth, ImageController.patch);
 
 // Delete all database logs of type Image.
-router.delete('/', checkAuth, ImageController.deleteAll);
+router.delete('/', auth.checkAuth, ImageController.deleteAll);
 
 // Delete only the Image with the id passed in to the URL.
-router.delete('/:imageId', checkAuth, ImageController.deleteSpecific);
+router.delete('/:imageId', auth.checkAuth, ImageController.deleteSpecific);
 
 export default router;

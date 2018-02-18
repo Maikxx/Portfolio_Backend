@@ -1,6 +1,6 @@
 {
     "name": "portfolio_backend",
-    "version": "3.0.0",
+    "version": "3.0.1",
     "description": "A Node.js RESTful API backend for my personal portfolio page.",
     "main": "server.js",
     "scripts": {
