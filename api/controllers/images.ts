@@ -181,8 +181,8 @@ export function deleteAll (req: any, res: any, next: any) {
                 }
 
                 for (const file of files) {
-                    fs.unlink(path.join(dirToRemoveFrom, file), (error: any) => {
-                        if (typeof error !== null) {
+                    fs.unlink(path.join(dirToRemoveFrom, file), (error: object) => {
+                        if (error) {
                             return console.error(error);
                         }
                     });
