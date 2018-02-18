@@ -15,7 +15,7 @@
         "./node_modules/@types/node/index.d.ts",
     ],
     "include": [
-        "src/**/*.ts",
+        "api/**/*.ts",
     ],
     "exclude": [
         "node_modules",

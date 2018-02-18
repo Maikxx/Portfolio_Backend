@@ -1,13 +1,13 @@
 {
     "name": "portfolio_backend",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "description": "A Node.js RESTful API backend for my personal portfolio page.",
-    "main": "index.ts",
+    "main": "server.js",
     "scripts": {
         "start": "yarn start-app",
         "clear-dist": "rm -rf dist/",
         "clear-uploads": "find uploads/ -type f -exec rm {} \\;",
-        "build-ts": "yarn clear-dist && tsc && copyfiles **/*.scss dist/",
+        "build-ts": "yarn clear-dist && tsc",
         "build": "yarn build-ts && babel --copy-files --include node_modules --out-dir dist dist",
         "serve": "nodemon --delay 3 --ignore \"test\" --watch ./dist --exec babel-node dist/server.js || exit 1",
         "start-app": "yarn build-ts && concurrently \"tsc -w\" \"(sleep 3 && yarn serve)\" --raw"
