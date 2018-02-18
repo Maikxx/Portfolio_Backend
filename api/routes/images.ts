@@ -5,6 +5,7 @@ const router = express.Router();
 import * as auth from '../auth/check-auth';
 import * as ImageController from '../controllers/images';
 
+// Set the typescript typing of the properties of the returned filetype.
 interface FileType {
     mimetype: string;
     originalname: string;
@@ -14,27 +15,43 @@ interface FileType {
     size: string;
 }
 
+// Define that the images need to be stored on a DISK, not in the memory and pass an object with options to it.
 const storage = multer.diskStorage({
     destination: (request: object, file: FileType, callback: any) => {
+        // Define a place to save the uploaded images.
         callback(null, 'uploads/');
     },
     filename: (request: object, file: FileType, callback: any) => {
-        const fileNameToSave = file.originalname.replace(/ /g, '_');
+        const {
+            originalname,
+        } = file;
+
+        // Create a good filename to save, by checking if there is a space in the file and replacing it with an underscore.
+        // Then paste the date of creation before it with an underscore and continue the process in the callback.
+        const fileNameToSave = originalname.replace(/ /g, '_');
         // tslint:disable-next-line:prefer-template
         callback(null, new Date().toISOString() + '_' + fileNameToSave);
     },
 });
 
+// Function which filters out the passable filetypes.
 const fileFilter = (request: object, file: FileType, callback: any) => {
-    if (file.mimetype === 'image/jpeg' ||
-        file.mimetype === 'image/jpg' ||
-        file.mimetype === 'image/png') {
+    const {
+        mimetype,
+    } = file;
+
+    // Check if the mimetype of the passed file matches, what the API accepts.
+    // If it does, continue the flow, else stop the flow and eventually throw an error.
+    if (mimetype === 'image/jpeg' ||
+        mimetype === 'image/jpg' ||
+        mimetype === 'image/png') {
         callback(null, true);
     } else {
         callback(null, false);
     }
 };
 
+// Upload parameters for uploading files to multer, via FormData.
 const upload = multer({
     storage: storage,
     fileFilter: fileFilter,

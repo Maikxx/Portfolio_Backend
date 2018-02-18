@@ -4,6 +4,7 @@ const router = express.Router();
 import * as auth from '../auth/check-auth';
 import * as UserController from '../controllers/user';
 
+// Route for signing users up.
 router.post('/signup', UserController.postSignUp);
 
 // Route for login in a user.
