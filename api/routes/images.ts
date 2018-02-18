@@ -28,9 +28,10 @@ const storage = multer.diskStorage({
 
         // Create a good filename to save, by checking if there is a space in the file and replacing it with an underscore.
         // Then paste the date of creation before it with an underscore and continue the process in the callback.
+        const newDate = new Date().toISOString();
         const fileNameToSave = originalname.replace(/ /g, '_');
-        // tslint:disable-next-line:prefer-template
-        callback(null, new Date().toISOString() + '_' + fileNameToSave);
+
+        callback(null, `${newDate}_${fileNameToSave}`);
     },
 });
 
