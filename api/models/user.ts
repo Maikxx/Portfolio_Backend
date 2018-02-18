@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
 
-// Something that is required: name: { type: String, required: true }
+// Set the mongoose schema for the userEntity that gets stored to the database.
 // Unique tells mongoose to optimize a field for searching, but it does not do any logic.
 const userSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,

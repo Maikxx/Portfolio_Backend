@@ -22,15 +22,17 @@ const startup = async () => {
     // tslint:disable-next-line:ter-max-len
     const connectionLink = `mongodb://${process.env.MONGO_ATLAS_NAME}:${process.env.MONGO_ATLAS_PW}${process.env.MONGO_ATLAS_CLUSTER}`;
 
+    // Start up a connection to the database with mongoose.
     mongoose.connect(connectionLink);
 
     const app = express();
 
-    // Use this route to get images by their image name.
+    // Make the uploads folder statically available.
     app.use('/uploads', express.static('uploads'));
     app.use(bodyParser.urlencoded({ extended: false }));
     app.use(bodyParser.json());
 
+    // Set the access options for the app.
     app.use((req: any, res: any, next: any) => {
         res.header('Access-Control-Allow-Origin', '*');
         res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
@@ -42,15 +44,18 @@ const startup = async () => {
         next();
     });
 
+    // Handling routes.
     app.use('/api/images', imageRoutes);
     app.use('/api/user', userRoutes);
 
+    // Route not found.
     app.use((req: any, res: any, next: any) => {
         const error = new Error('Route not found!');
         error.name = 'RouteError';
         next(error);
     });
 
+    // Catch errors in the app.
     app.use((error, req: any, res: any, next: any) => {
         res.status(error.status || 500);
         res.json({
@@ -60,12 +65,15 @@ const startup = async () => {
         });
     });
 
+    // Keep the server alive with this function.
     await listen(app, {
         port: parseInt(port, 10),
     });
 };
 
-// Runs the startup code and listens for a promise.
+// Runs the startup code and listens for a result from the listen(app).
+// If the startup function is succesful log the API endpoint, else log an error to the console.
+// This error contaisn a trace of which functions where called, in what order etc.
 startup()
     .then(() => {
         const baseUrl = `${process.env.BASE_URL}${port}`;
@@ -75,17 +83,18 @@ startup()
         console.error(error.stack);
     });
 
-// Catches all other errors.
-process.on('unhandledRejection', (r: any) => {
-    console.log(r);
+// Catches rejection errors, and log it to the console.
+process.on('unhandledRejection', (rejection: any) => {
+    console.log(rejection);
 });
 
-// Handles ctlr+c events.
+// Handles ctlr+c events. If it cannot normally exit the program then log an error and exit the process.
+// Else just log Bye!
 process.on('SIGINT', async () => {
     try {
-        console.log(' Bye!');
-    } catch (err) {
-        console.error('You have an error in the SIGINT handler', err.stack);
+        console.log('Bye!');
+    } catch (error) {
+        console.error('You have an error in the SIGINT handler', error.stack);
     }
 
     process.exit(0);

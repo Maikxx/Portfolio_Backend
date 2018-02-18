@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
 
-// Something that is required: name: { type: String, required: true }
+// Set the mongoose schema for the imageEntity that gets stored to the database.
 const imageScheme = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     image: {
