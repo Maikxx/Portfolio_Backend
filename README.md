@@ -6,4 +6,6 @@
 
 ```bash
 git clone git@github.com:Maikxx/Portfolio_Backend.git
+cd Portfolio_Backend
+npm start
 ```
