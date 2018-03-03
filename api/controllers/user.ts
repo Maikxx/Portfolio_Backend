@@ -93,11 +93,6 @@ export function deleteAll (req: any, res: any, next: any) {
         .then(result => {
             res.status(200).json({
                 message: 'Deleted all items',
-                requestAllImages: {
-                    type: 'GET',
-                    description: 'See the empty list of images.',
-                    url: `${req.protocol}://${req.get('host')}`,
-                },
             });
         })
         .catch(error => onError(res, error));
