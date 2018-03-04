@@ -57,7 +57,6 @@ const startup = async () => {
 
     // Catch errors in the app.
     app.use((error: any, req: any, res: any, next: any) => {
-        console.log(req.headers);
         res.status(error.status || 500)
             .json({
                 error: error,
