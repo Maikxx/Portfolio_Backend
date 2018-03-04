@@ -11,6 +11,7 @@ import { listen } from './utils/listen';
 
 import imageRoutes from './routes/images';
 import userRoutes from './routes/user';
+import uploadsRoute from './routes/uploads';
 
 console.log('Hold your horses! I am (Re)starting...');
 
@@ -27,8 +28,6 @@ const startup = async () => {
 
     const app = express();
 
-    // Make the uploads folder statically available.
-    app.use('/uploads', express.static('uploads'));
     app.use(bodyParser.urlencoded({ extended: false }));
     app.use(bodyParser.json());
 
@@ -47,6 +46,7 @@ const startup = async () => {
     // Handling routes.
     app.use('/api/images', imageRoutes);
     app.use('/api/user', userRoutes);
+    app.use('/uploads', uploadsRoute);
 
     // Route not found.
     app.use((req: any, res: any, next: any) => {
@@ -56,13 +56,12 @@ const startup = async () => {
     });
 
     // Catch errors in the app.
-    app.use((error, req: any, res: any, next: any) => {
-        res.status(error.status || 500);
-        res.json({
-            error: {
-                message: error.message,
-            },
-        });
+    app.use((error: any, req: any, res: any, next: any) => {
+        console.log(req.headers);
+        res.status(error.status || 500)
+            .json({
+                error: error,
+            });
     });
 
     // Keep the server alive with this function.
