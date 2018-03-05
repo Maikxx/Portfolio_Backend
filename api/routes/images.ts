@@ -59,7 +59,7 @@ const upload = multer({
 });
 
 // Create a new image with the name, description and location that are passed in via the request.
-router.post('/', auth.checkAuth, upload.single('image'), ImageController.post);
+router.post('/', auth.checkAuth, upload.array('image', 10), ImageController.post);
 
 // Get all the Images from the database.
 // Select does what it describes, it selects items to return in the response of the find.

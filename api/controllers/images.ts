@@ -12,52 +12,39 @@ interface ImageType {
 
 const Image = require('../models/image');
 
-export function post (req: any, res: any, next: any) {
+// Todo: Refactor this file.
+export async function post (req: any, res: any, next: any) {
     function calculateFileSize(size: number) {
         return size / 1000;
     }
 
-    const image = new Image({
-        _id: new mongoose.Types.ObjectId(),
-        name: req.body.name,
-        description: req.body.description,
-        location: req.body.location,
-        image: {
-            originalname: req.file.originalname,
-            destination: req.file.destination,
-            filename: req.file.filename,
-            path: req.file.path,
-            size: `${calculateFileSize(req.file.size)}kb`,
-        },
-    });
-
-    image.save()
-        .then((result: ImageType) => {
-            const {
-                _id,
-                name,
-                description,
-                location,
-                image,
-            } = result;
-
-            res.status(201).json({
-                storedImage: {
-                    _id: _id,
-                    name: name,
-                    description: description,
-                    location: location,
-                    image: image,
-                    requestUsed: 'POST',
-                    requestThisImage: {
-                        type: 'GET',
-                        description: 'Get the last saved image via this request.',
-                        url: getSingleImageUrl(generateServerUrl(req), _id),
-                    },
+    if (req.files.length > 0) {
+        await req.files.map(async (file: any) => {
+            const image = await new Image({
+                _id: new mongoose.Types.ObjectId(),
+                name: req.body.name,
+                description: req.body.description,
+                location: req.body.location,
+                image: {
+                    originalname: file.originalname,
+                    destination: file.destination,
+                    filename: file.filename,
+                    path: file.path,
+                    size: `${calculateFileSize(file.size)}kb`,
                 },
             });
-        })
-        .catch((error: any) => onError(res, error));
+
+            try {
+                await image.save();
+            } catch (error) {
+                onError(res, error);
+            }
+        });
+
+        res.status(201).json({
+            message: 'OK, images succesfully saved.',
+        });
+    }
 }
 
 export function getAll (req: any, res: any, next: any) {
