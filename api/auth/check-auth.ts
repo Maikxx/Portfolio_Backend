@@ -7,7 +7,7 @@ export function checkAuth (req: any, res: any, next: any) {
 
         // Verify the token via jsonwebtoken.
         const decoded = jwt.verify(token, process.env.JWT_KEY)
-        console.log(decoded)
+
         // Assign the verified, decoded value to the request.
         req.userData = decoded
 
