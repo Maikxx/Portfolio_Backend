@@ -3,6 +3,7 @@
     "version": "3.0.1",
     "description": "A Node.js RESTful API backend for my personal portfolio page.",
     "main": "server.js",
+    "private": true,
     "scripts": {
         "start": "yarn start-app",
         "clear-dist": "rm -rf dist/",
