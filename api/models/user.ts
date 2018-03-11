@@ -1,4 +1,4 @@
-import * as mongoose from 'mongoose';
+import * as mongoose from 'mongoose'
 
 // Set the mongoose schema for the userEntity that gets stored to the database.
 // Unique tells mongoose to optimize a field for searching, but it does not do any logic.
@@ -19,6 +19,6 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-});
+})
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('User', userSchema)

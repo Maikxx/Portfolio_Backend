@@ -1,21 +1,21 @@
-import * as mongoose from 'mongoose';
-import * as fs from 'fs';
-import * as path from 'path';
+import * as mongoose from 'mongoose'
+import * as fs from 'fs'
+import * as path from 'path'
 
 interface ImageType {
-    _id: string;
-    name: string;
-    description: string;
-    location: string;
-    image: any;
+    _id: string
+    name: string
+    description: string
+    location: string
+    image: any
 }
 
-const Image = require('../models/image');
+const Image = require('../models/image')
 
 // Todo: Refactor this file.
 export async function post (req: any, res: any, next: any) {
     function calculateFileSize(size: number) {
-        return size / 1000;
+        return size / 1000
     }
 
     if (req.files.length > 0) {
@@ -32,18 +32,18 @@ export async function post (req: any, res: any, next: any) {
                     path: file.path,
                     size: `${calculateFileSize(file.size)}kb`,
                 },
-            });
+            })
 
             try {
-                await image.save();
+                await image.save()
             } catch (error) {
-                onError(res, error);
+                onError(res, error)
             }
-        });
+        })
 
         res.status(201).json({
             message: 'OK, images succesfully saved.',
-        });
+        })
     }
 }
 
@@ -61,7 +61,7 @@ export function getAll (req: any, res: any, next: any) {
                         description,
                         location,
                         image,
-                    } = result;
+                    } = result
 
                     return {
                         _id: _id,
@@ -73,15 +73,15 @@ export function getAll (req: any, res: any, next: any) {
                             type: 'GET',
                             url: getSingleImageUrl(generateServerUrl(req), _id),
                         },
-                    };
+                    }
                 }),
-            });
+            })
         })
-        .catch((error: any) => onError(res, error));
+        .catch((error: any) => onError(res, error))
 }
 
 export function getSpecific (req: any, res: any, next: any) {
-    const imageId = req.params.imageId;
+    const imageId = req.params.imageId
 
     Image.findById(imageId)
         .then((result: ImageType) => {
@@ -91,12 +91,12 @@ export function getSpecific (req: any, res: any, next: any) {
                 description,
                 location,
                 image,
-            } = result;
+            } = result
 
             if (!result) {
                 res.status(404).json({
                     message: 'No valid entry found for the provided ID',
-                });
+                })
             } else {
                 res.status(200).json({
                     storedImage: {
@@ -110,18 +110,18 @@ export function getSpecific (req: any, res: any, next: any) {
                             url: getSingleImageUrl(generateServerUrl(req), _id),
                         },
                     },
-                });
+                })
             }
         })
-        .catch((error: any) => onError(res, error));
+        .catch((error: any) => onError(res, error))
 }
 
 export function patch (req: any, res: any, next: any) {
-    const imageId = req.params.imageId;
-    const updateOps = {};
+    const imageId = req.params.imageId
+    const updateOps = {}
 
     for (const ops of req.params.imageId) {
-        updateOps[ops.propName] = ops.value;
+        updateOps[ops.propName] = ops.value
     }
 
     Image.update({ _id: imageId }, { $set: updateOps })
@@ -132,7 +132,7 @@ export function patch (req: any, res: any, next: any) {
                 description,
                 location,
                 image,
-            } = result;
+            } = result
 
             res.status(200).json({
                 patchedImage: {
@@ -151,30 +151,30 @@ export function patch (req: any, res: any, next: any) {
                         url: getSingleImageUrl(generateServerUrl(req), _id),
                     },
                 },
-            });
+            })
         })
-        .catch((error: any) => onError(res, error));
+        .catch((error: any) => onError(res, error))
 }
 
 export function deleteAll (req: any, res: any, next: any) {
     Image.remove({})
         .exec()
         .then((result: object) => {
-            const dirToRemoveFrom = 'uploads';
+            const dirToRemoveFrom = 'uploads'
 
             fs.readdir(dirToRemoveFrom, (error: any, files: any) => {
                 if (error) {
-                    return console.error(error);
+                    return console.error(error)
                 }
 
                 for (const file of files) {
                     fs.unlink(path.join(dirToRemoveFrom, file), (error: object) => {
                         if (error) {
-                            return console.error(error);
+                            return console.error(error)
                         }
-                    });
+                    })
                 }
-            });
+            })
 
             res.status(200).json({
                 message: 'Deleted all items',
@@ -183,13 +183,13 @@ export function deleteAll (req: any, res: any, next: any) {
                     description: 'See the empty list of images.',
                     url: getAllImages(generateServerUrl(req)),
                 },
-            });
+            })
         })
-        .catch((error: any) => onError(res, error));
+        .catch((error: any) => onError(res, error))
 }
 
 export function deleteSpecific (req: any, res: any, next: any) {
-    const imageId = req.params.imageId;
+    const imageId = req.params.imageId
 
     Image.remove({ _id: imageId })
         .exec()
@@ -201,27 +201,27 @@ export function deleteSpecific (req: any, res: any, next: any) {
                     description: 'See the list of images that remained after this deletion.',
                     url: getAllImages(generateServerUrl(req)),
                 },
-            });
+            })
         })
-        .catch((error: any) => onError(res, error));
+        .catch((error: any) => onError(res, error))
 }
 
 function onError (response: any, error: any) {
-    console.error(error);
+    console.error(error)
 
     response.status(500).json({
         error: error,
-    });
+    })
 }
 
 function getSingleImageUrl (serverURL: string, imageId: string) {
-    return `${serverURL}/api/images/${imageId}`;
+    return `${serverURL}/api/images/${imageId}`
 }
 
 function generateServerUrl (req: any) {
-    return `${req.protocol}://${req.get('host')}`;
+    return `${req.protocol}://${req.get('host')}`
 }
 
 function getAllImages (serverURL: string) {
-    return `${serverURL}/api/images/`;
+    return `${serverURL}/api/images/`
 }

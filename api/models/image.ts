@@ -1,4 +1,4 @@
-import * as mongoose from 'mongoose';
+import * as mongoose from 'mongoose'
 
 // Set the mongoose schema for the imageEntity that gets stored to the database.
 const imageScheme = mongoose.Schema({
@@ -31,6 +31,6 @@ const imageScheme = mongoose.Schema({
     name: String,
     description: String,
     location: String,
-});
+})
 
-module.exports = mongoose.model('Image', imageScheme);
+module.exports = mongoose.model('Image', imageScheme)

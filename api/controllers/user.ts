@@ -1,8 +1,8 @@
-import * as mongoose from 'mongoose';
-import * as bcrypt from 'bcrypt';
-import * as jwt from 'jsonwebtoken';
+import * as mongoose from 'mongoose'
+import * as bcrypt from 'bcrypt'
+import * as jwt from 'jsonwebtoken'
 
-const User = require('../models/user');
+const User = require('../models/user')
 
 // This function handles the /api/user/signup route.
 export function postSignUp (req: any, res: any, next: any) {
@@ -16,19 +16,19 @@ export function postSignUp (req: any, res: any, next: any) {
                 // Status 422 means unprocessable entity, which is pretty much the same as 409.
                 return res.status(409).json({
                     message: 'Mail already exists',
-                });
+                })
             } else {
                 // Hash their password.
                 bcrypt.hash(req.body.password, 10, (error: object, hash: string) => {
                     if (error) {
-                        return onError(res, error);
+                        return onError(res, error)
                     } else {
                         const user = new User({
                             _id: new mongoose.Types.ObjectId(),
                             name: req.body.name,
                             email: req.body.email,
                             password: hash,
-                        });
+                        })
 
                         user.save()
                             .then(result => {
@@ -39,13 +39,13 @@ export function postSignUp (req: any, res: any, next: any) {
                                         email: result.email,
                                     },
                                     message: 'User successfully created',
-                                });
+                                })
                             })
-                            .catch(error => onError(res, error));
+                            .catch(error => onError(res, error))
                     }
-                });
+                })
             }
-        });
+        })
 }
 
 export function postLogin (req: any, res: any, next: any) {
@@ -55,14 +55,14 @@ export function postLogin (req: any, res: any, next: any) {
             if (user.length < 1) {
                 return res.status(401).json({
                     message: 'Authentication failed',
-                });
+                })
             }
 
             bcrypt.compare(req.body.password, user[0].password, (error, response) => {
                 if (error) {
                     return res.status(401).json({
                         message: 'Authentication failed',
-                    });
+                    })
                 }
 
                 if (response) {
@@ -71,20 +71,20 @@ export function postLogin (req: any, res: any, next: any) {
                         userId: user[0]._id,
                     }, process.env.JWT_KEY, {
                         expiresIn: '1h',
-                    });
+                    })
 
                     return res.status(200).json({
                         message: 'Authentication successful',
                         token: token,
-                    });
+                    })
                 } else {
                     return res.status(401).json({
                         message: 'Authentication failed',
-                    });
+                    })
                 }
-            });
+            })
         })
-        .catch(error => onError(res, error));
+        .catch(error => onError(res, error))
 }
 
 export function deleteAll (req: any, res: any, next: any) {
@@ -93,9 +93,9 @@ export function deleteAll (req: any, res: any, next: any) {
         .then(result => {
             res.status(200).json({
                 message: 'Deleted all items',
-            });
+            })
         })
-        .catch(error => onError(res, error));
+        .catch(error => onError(res, error))
 }
 
 export function deleteSpecific (req: any, res: any, next: any) {
@@ -104,16 +104,16 @@ export function deleteSpecific (req: any, res: any, next: any) {
         .then(result => {
             res.status(200).json({
                 message: 'User deleted',
-            });
+            })
         })
-        .catch(error => onError(res, error));
+        .catch(error => onError(res, error))
 }
 
 // Function that handles errors in the above exported functions.
 function onError (response: any, error: any) {
-    console.error(error);
+    console.error(error)
 
     response.status(500).json({
         error: error,
-    });
+    })
 }

@@ -60,7 +60,7 @@
       "prefer-template": true,
       "quotemark": [true, "single", "jsx-double"],
       "radix": true,
-      "semicolon": [true, "always"],
+      "semicolon": [true, "never"],
       "space-in-parens": [true, "never"],
       "ter-arrow-parens": [false, "as-needed"],
       "ter-arrow-spacing": [true],

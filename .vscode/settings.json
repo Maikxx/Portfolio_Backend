@@ -4,5 +4,7 @@
     },
     "files.exclude": {
         "dist": true,
-    }
+    },
+    "tslint.enable": true,
+    "tslint.autoFixOnSave": true
 }
