@@ -1,3 +1,4 @@
+import * as mongoose from 'mongoose'
 import * as bcrypt from 'bcrypt'
 import * as jwt from 'jsonwebtoken'
 
