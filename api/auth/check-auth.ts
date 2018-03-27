@@ -1,6 +1,7 @@
+import * as express from 'express'
 import * as jwt from 'jsonwebtoken'
 
-export function checkAuth (req: any, res: any, next: any) {
+export function checkAuth (req: express.Request & {headers: any, userData: string}, res: express.Response, next: express.NextFunction) {
     try {
         // Get the token from the client via headers and remove the Bearer piece of it.
         const token = req.headers.authorization.split(' ')[1]

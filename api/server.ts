@@ -34,7 +34,7 @@ const startup = async () => {
     app.use(bodyParser.json())
 
     // Set the access options for the app.
-    app.use((req: any, res: any, next: any) => {
+    app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
         res.header('Access-Control-Allow-Origin', '*')
         res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization')
 
@@ -51,14 +51,14 @@ const startup = async () => {
     app.use('/uploads', uploadsRoute)
 
     // Route not found.
-    app.use((req: any, res: any, next: any) => {
+    app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
         const error = new Error('Route not found!')
         error.name = 'RouteError'
         next(error)
     })
 
     // Catch errors in the app.
-    app.use((error: any, req: any, res: any, next: any) => {
+    app.use((error: any , req: express.Request, res: express.Response, next: express.NextFunction) => {
         res.status(error.status || 500)
             .json({
                 error: error,
