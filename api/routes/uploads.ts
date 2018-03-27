@@ -8,11 +8,18 @@ router.get('/:imageFileName', auth.checkAuth, (req: any, res: any, next: any) =>
     const fileName = req.params.imageFileName
     const filePath = path.resolve(`uploads/${fileName}`)
     const fileExtension = path.extname(filePath).replace(/\./g, '/')
-    const base64String = fs.readFileSync(filePath, 'base64')
 
-    res.status(200).json({
-        base64String,
-        fileExtension,
+    fs.readFile(filePath, 'base64', (error: any, base64String: string) => {
+        if (error) {
+            return res.status(500).json({
+                message: 'Something went wrong inside the server!',
+            })
+        } else {
+            res.status(200).json({
+                base64String,
+                fileExtension,
+            })
+        }
     })
 })
 
