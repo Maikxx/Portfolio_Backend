@@ -1,3 +1,4 @@
+import * as express from 'express'
 import * as mongoose from 'mongoose'
 import * as bcrypt from 'bcrypt'
 import * as jwt from 'jsonwebtoken'
@@ -5,7 +6,7 @@ import * as jwt from 'jsonwebtoken'
 const User = require('../models/user')
 
 // This function handles the /api/user/signup route.
-export function postSignUp (req: any, res: any, next: any) {
+export function postSignUp (req: express.Request, res: express.Response, next: express.NextFunction) {
     // First we look for, if a user already exists, by their email account and make that a promise.
     User.find({ email: req.body.email })
         .exec()
@@ -19,7 +20,7 @@ export function postSignUp (req: any, res: any, next: any) {
                 })
             } else {
                 // Hash their password.
-                bcrypt.hash(req.body.password, 10, (error: object, hash: string) => {
+                bcrypt.hash(req.body.password, 10, (error: express.Errback, hash: string) => {
                     if (error) {
                         return onError(res, error)
                     } else {
@@ -48,7 +49,7 @@ export function postSignUp (req: any, res: any, next: any) {
         })
 }
 
-export function postLogin (req: any, res: any, next: any) {
+export function postLogin (req: express.Request, res: express.Response, next: express.NextFunction) {
     User.find({ email: req.body.email })
         .exec()
         .then(user => {
@@ -87,7 +88,7 @@ export function postLogin (req: any, res: any, next: any) {
         .catch(error => onError(res, error))
 }
 
-export function deleteAll (req: any, res: any, next: any) {
+export function deleteAll (req: express.Request, res: express.Response, next: express.NextFunction) {
     User.remove({})
         .exec()
         .then(result => {
@@ -98,7 +99,7 @@ export function deleteAll (req: any, res: any, next: any) {
         .catch(error => onError(res, error))
 }
 
-export function deleteSpecific (req: any, res: any, next: any) {
+export function deleteSpecific (req: express.Request, res: express.Response, next: express.NextFunction) {
     User.remove({ _id: req.params.userId })
         .exec()
         .then(result => {

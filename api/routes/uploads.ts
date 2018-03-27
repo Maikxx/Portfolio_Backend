@@ -4,12 +4,12 @@ import * as path from 'path'
 import * as auth from '../auth/check-auth'
 const router = express.Router()
 
-router.get('/:imageFileName', auth.checkAuth, (req: any, res: any, next: any) => {
+router.get('/:imageFileName', auth.checkAuth, (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const fileName = req.params.imageFileName
     const filePath = path.resolve(`uploads/${fileName}`)
     const fileExtension = path.extname(filePath).replace(/\./g, '/')
 
-    fs.readFile(filePath, 'base64', (error: any, base64String: string) => {
+    fs.readFile(filePath, 'base64', (error: object, base64String: string) => {
         if (error) {
             return res.status(500).json({
                 message: 'Something went wrong inside the server!',
