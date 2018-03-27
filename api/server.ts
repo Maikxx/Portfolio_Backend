@@ -3,6 +3,7 @@ if (process.env.NODE_ENV !== 'production') {
     require('dotenv').load()
 }
 
+import * as helmet from 'helmet'
 import * as express from 'express'
 import * as bodyParser from 'body-parser'
 import * as mongoose from 'mongoose'
@@ -28,6 +29,7 @@ const startup = async () => {
 
     const app = express()
 
+    app.use(helmet())
     app.use(bodyParser.urlencoded({ extended: false }))
     app.use(bodyParser.json())
 
