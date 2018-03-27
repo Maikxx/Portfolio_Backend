@@ -1,24 +1,19 @@
+import * as express from 'express'
 import * as mongoose from 'mongoose'
 import * as fs from 'fs'
 import * as path from 'path'
-
-interface ImageType {
-    _id: string
-    name: string
-    description: string
-    location: string
-    image: any
-}
+import { MulterFile } from 'api/types/multerFile'
+import { ImageType } from 'api/types/image'
 
 const Image = require('../models/image')
 
 // Todo: Refactor this file.
-export async function post (req: any, res: any, next: any) {
+export async function post (req: express.Request & {files: MulterFile[]}, res: express.Response, next: express.NextFunction) {
     function calculateFileSize(size: number) {
         return size / 1000
     }
 
-    if (req.files.length > 0) {
+    if (req.files && req.files.length) {
         await req.files.map(async (file: any) => {
             const image = await new Image({
                 _id: new mongoose.Types.ObjectId(),
@@ -47,7 +42,7 @@ export async function post (req: any, res: any, next: any) {
     }
 }
 
-export function getAll (req: any, res: any, next: any) {
+export function getAll (req: express.Request, res: express.Response, next: express.NextFunction) {
     Image.find()
         .select('name description location image')
         .exec()
@@ -80,7 +75,7 @@ export function getAll (req: any, res: any, next: any) {
         .catch((error: any) => onError(res, error))
 }
 
-export function getSpecific (req: any, res: any, next: any) {
+export function getSpecific (req: express.Request, res: express.Response, next: express.NextFunction) {
     const imageId = req.params.imageId
 
     Image.findById(imageId)
@@ -116,7 +111,7 @@ export function getSpecific (req: any, res: any, next: any) {
         .catch((error: any) => onError(res, error))
 }
 
-export function patch (req: any, res: any, next: any) {
+export function patch (req: express.Request, res: express.Response, next: express.NextFunction) {
     const imageId = req.params.imageId
     const updateOps = {}
 
@@ -156,10 +151,10 @@ export function patch (req: any, res: any, next: any) {
         .catch((error: any) => onError(res, error))
 }
 
-export function deleteAll (req: any, res: any, next: any) {
+export function deleteAll (req: express.Request, res: express.Response, next: express.NextFunction) {
     Image.remove({})
         .exec()
-        .then((result: object) => {
+        .then((result: any) => {
             const dirToRemoveFrom = 'uploads'
 
             fs.readdir(dirToRemoveFrom, (error: any, files: any) => {
@@ -188,7 +183,7 @@ export function deleteAll (req: any, res: any, next: any) {
         .catch((error: any) => onError(res, error))
 }
 
-export function deleteSpecific (req: any, res: any, next: any) {
+export function deleteSpecific (req: express.Request, res: express.Response, next: express.NextFunction) {
     const imageId = req.params.imageId
 
     Image.remove({ _id: imageId })
@@ -206,7 +201,7 @@ export function deleteSpecific (req: any, res: any, next: any) {
         .catch((error: any) => onError(res, error))
 }
 
-function onError (response: any, error: any) {
+function onError (response: express.Response, error: any) {
     console.error(error)
 
     response.status(500).json({
@@ -218,7 +213,7 @@ function getSingleImageUrl (serverURL: string, imageId: string) {
     return `${serverURL}/api/images/${imageId}`
 }
 
-function generateServerUrl (req: any) {
+function generateServerUrl (req: express.Request) {
     return `${req.protocol}://${req.get('host')}`
 }
 
