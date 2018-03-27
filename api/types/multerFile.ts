@@ -4,5 +4,6 @@ export interface MulterFile {
     mimetype: string
     originalname: string
     destination: string
+    filename: string
     size: number
 }

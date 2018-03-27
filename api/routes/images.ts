@@ -17,11 +17,11 @@ interface FileType {
 
 // Define that the images need to be stored on a DISK, not in the memory and pass an object with options to it.
 const storage = multer.diskStorage({
-    destination: (request: object, file: FileType, callback: any) => {
+    destination: (request: express.Request, file: FileType, callback: any) => {
         // Define a place to save the uploaded images.
         callback(null, 'uploads/')
     },
-    filename: (request: object, file: FileType, callback: any) => {
+    filename: (request: express.Request, file: FileType, callback: any) => {
         const {
             originalname,
         } = file
@@ -36,7 +36,7 @@ const storage = multer.diskStorage({
 })
 
 // Function which filters out the passable filetypes.
-const fileFilter = (request: object, file: FileType, callback: any) => {
+const fileFilter = (request: express.Request, file: FileType, callback: any) => {
     const {
         mimetype,
     } = file

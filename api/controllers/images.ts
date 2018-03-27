@@ -2,8 +2,8 @@ import * as express from 'express'
 import * as mongoose from 'mongoose'
 import * as fs from 'fs'
 import * as path from 'path'
-import { MulterFile } from 'api/types/multerFile'
-import { ImageType } from 'api/types/image'
+import { MulterFile } from '../types/multerFile'
+import { ImageType } from '../types/image'
 
 const Image = require('../models/image')
 
@@ -14,7 +14,7 @@ export async function post (req: express.Request & {files: MulterFile[]}, res: e
     }
 
     if (req.files && req.files.length) {
-        await req.files.map(async (file: any) => {
+        await req.files.map(async (file: MulterFile) => {
             const image = await new Image({
                 _id: new mongoose.Types.ObjectId(),
                 name: req.body.name,
@@ -50,27 +50,21 @@ export function getAll (req: express.Request, res: express.Response, next: expre
             res.status(200).json({
                 count: results.length,
                 images: results.map((result: ImageType) => {
-                    const {
-                        _id,
-                        name,
-                        description,
-                        location,
-                        image,
-                    } = result
+                    const { _id } = result
 
                     return {
                         _id: _id,
-                        name: name,
-                        description: description,
-                        location: location,
-                        image: image,
+                        name: result.name,
+                        description: result.description,
+                        location: result.location,
+                        image: result.image,
                         requestUsed: {
                             type: 'GET',
                             url: getSingleImageUrl(generateServerUrl(req), _id),
                         },
                     }
-                }),
-            })
+                }
+            )})
         })
         .catch((error: any) => onError(res, error))
 }
@@ -82,10 +76,6 @@ export function getSpecific (req: express.Request, res: express.Response, next: 
         .then((result: ImageType) => {
             const {
                 _id,
-                name,
-                description,
-                location,
-                image,
             } = result
 
             if (!result) {
@@ -96,10 +86,10 @@ export function getSpecific (req: express.Request, res: express.Response, next: 
                 res.status(200).json({
                     storedImage: {
                         _id: _id,
-                        name: name,
-                        description: description,
-                        location: location,
-                        image: image,
+                        name: result.name,
+                        description: result.description,
+                        location: result.location,
+                        image: result.image,
                         requestUsed: {
                             type: 'GET',
                             url: getSingleImageUrl(generateServerUrl(req), _id),
@@ -123,19 +113,15 @@ export function patch (req: express.Request, res: express.Response, next: expres
         .then((result: ImageType) => {
             const {
                 _id,
-                name,
-                description,
-                location,
-                image,
             } = result
 
             res.status(200).json({
                 patchedImage: {
                     _id: _id,
-                    name: name,
-                    description: description,
-                    location: location,
-                    image: image,
+                    name: result.name,
+                    description: result.description,
+                    location: result.location,
+                    image: result.image,
                     requestUsed: {
                         type: 'PATCH',
                         url: getSingleImageUrl(generateServerUrl(req), _id),

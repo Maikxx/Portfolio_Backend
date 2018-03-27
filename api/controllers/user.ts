@@ -2,6 +2,7 @@ import * as express from 'express'
 import * as mongoose from 'mongoose'
 import * as bcrypt from 'bcrypt'
 import * as jwt from 'jsonwebtoken'
+import { UserType } from '../types/user'
 
 const User = require('../models/user')
 
@@ -32,7 +33,7 @@ export function postSignUp (req: express.Request, res: express.Response, next: e
                         })
 
                         user.save()
-                            .then(result => {
+                            .then((result: UserType) => {
                                 res.status(201).json({
                                     storedUser: {
                                         _id: result._id,
