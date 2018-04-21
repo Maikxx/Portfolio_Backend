@@ -7,7 +7,6 @@ import { ImageType } from '../types/image'
 
 const Image = require('../models/image')
 
-// Todo: Refactor this file.
 export async function post (req: express.Request & {files: MulterFile[]}, res: express.Response, next: express.NextFunction) {
     function calculateFileSize(size: number) {
         return size / 1000
