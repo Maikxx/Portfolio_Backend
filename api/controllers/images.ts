@@ -13,27 +13,27 @@ export async function post (req: express.Request & {files: MulterFile[]}, res: e
     }
 
     if (req.files && req.files.length) {
-        await req.files.map(async (file: MulterFile) => {
-            const image = await new Image({
-                _id: new mongoose.Types.ObjectId(),
-                name: req.body.name,
-                description: req.body.description,
-                location: req.body.location,
-                image: {
-                    originalname: file.originalname,
-                    destination: file.destination,
-                    filename: file.filename,
-                    path: file.path,
-                    size: `${calculateFileSize(file.size)}kb`,
-                },
-            })
+        try {
+            await req.files.map(async (file: MulterFile) => {
+                const image = await new Image({
+                    _id: new mongoose.Types.ObjectId(),
+                    name: req.body.name,
+                    description: req.body.description,
+                    location: req.body.location,
+                    image: {
+                        originalname: file.originalname,
+                        destination: file.destination,
+                        filename: file.filename,
+                        path: file.path,
+                        size: `${calculateFileSize(file.size)}kb`,
+                    },
+                })
 
-            try {
                 await image.save()
-            } catch (error) {
-                onError(res, error)
-            }
-        })
+            })
+        } catch (error) {
+            onError(res, error)
+        }
 
         res.status(201).json({
             message: 'OK, images succesfully saved.',
