@@ -7,6 +7,7 @@ import { ImageType } from '../types/image'
 
 const Image = require('../models/image')
 
+// Function to add new images to this server and add a db entry.
 export async function post (req: express.Request & {files: MulterFile[]}, res: express.Response, next: express.NextFunction) {
     function calculateFileSize(size: number) {
         return size / 1000
@@ -41,6 +42,7 @@ export async function post (req: express.Request & {files: MulterFile[]}, res: e
     }
 }
 
+// Function that gives all the entry points of images found back to the client.
 export function getAll (req: express.Request, res: express.Response, next: express.NextFunction) {
     Image.find()
         .select('name description location image')
@@ -68,6 +70,7 @@ export function getAll (req: express.Request, res: express.Response, next: expre
         .catch((error: any) => onError(res, error))
 }
 
+// Gets one specific image url.
 export function getSpecific (req: express.Request, res: express.Response, next: express.NextFunction) {
     const imageId = req.params.imageId
 
@@ -100,6 +103,7 @@ export function getSpecific (req: express.Request, res: express.Response, next: 
         .catch((error: any) => onError(res, error))
 }
 
+// Update an image and it's description contents.
 export function patch (req: express.Request, res: express.Response, next: express.NextFunction) {
     const imageId = req.params.imageId
     const updateOps = {}
@@ -136,6 +140,7 @@ export function patch (req: express.Request, res: express.Response, next: expres
         .catch((error: any) => onError(res, error))
 }
 
+// Deletes all images and their entries from the database. Only used with Postman.
 export function deleteAll (req: express.Request, res: express.Response, next: express.NextFunction) {
     Image.remove({})
         .exec()
@@ -168,6 +173,7 @@ export function deleteAll (req: express.Request, res: express.Response, next: ex
         .catch((error: any) => onError(res, error))
 }
 
+// Deletes one image and it's entry from the database. Only used with Postman.
 export function deleteSpecific (req: express.Request, res: express.Response, next: express.NextFunction) {
     const imageId = req.params.imageId
 
