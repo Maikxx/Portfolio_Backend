@@ -32,6 +32,7 @@ export function postSignUp (req: express.Request, res: express.Response, next: e
                             password: hash,
                         })
 
+                        // Save the new user to the database.
                         user.save()
                             .then((result: UserType) => {
                                 res.status(201).json({
@@ -50,6 +51,7 @@ export function postSignUp (req: express.Request, res: express.Response, next: e
         })
 }
 
+// Route for login in the user from the client.
 export function postLogin (req: express.Request, res: express.Response, next: express.NextFunction) {
     User.find({ email: req.body.email })
         .exec()
@@ -60,6 +62,7 @@ export function postLogin (req: express.Request, res: express.Response, next: ex
                 })
             }
 
+            // Compare the user submitted password with the hashed password that is stored in the database.
             bcrypt.compare(req.body.password, user[0].password, (error, response) => {
                 if (error) {
                     return res.status(401).json({
@@ -68,12 +71,14 @@ export function postLogin (req: express.Request, res: express.Response, next: ex
                 }
 
                 if (response) {
-                    const token = jwt.sign({
-                        email: user[0].email,
-                        userId: user[0]._id,
-                    }, process.env.JWT_KEY, {
-                        expiresIn: '1h',
-                    })
+                    const token = jwt.sign(
+                        {
+                            email: user[0].email,
+                            userId: user[0]._id,
+                        },
+                        process.env.JWT_KEY,
+                        { expiresIn: '1h' }
+                    )
 
                     return res.status(200).json({
                         message: 'Authentication successful',
@@ -89,6 +94,7 @@ export function postLogin (req: express.Request, res: express.Response, next: ex
         .catch(error => onError(res, error))
 }
 
+// Route which is only enabled in development enviroments, this deletes all users.
 export function deleteAll (req: express.Request, res: express.Response, next: express.NextFunction) {
     User.remove({})
         .exec()
@@ -100,6 +106,7 @@ export function deleteAll (req: express.Request, res: express.Response, next: ex
         .catch(error => onError(res, error))
 }
 
+// Route which is only enabled in development enviroments, this deletes one specific user.
 export function deleteSpecific (req: express.Request, res: express.Response, next: express.NextFunction) {
     User.remove({ _id: req.params.userId })
         .exec()
