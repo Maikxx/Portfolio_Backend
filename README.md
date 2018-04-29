@@ -52,3 +52,7 @@ Once you have done all of this, you can run `yarn start-app` and along with the 
 Please keep in mind that this version is not very optimized in terms of image sizes, it will send a image to the client back, which is rougly the same size as the one you uploaded.
 
 Also make sure to check the front-end code, in case you are not using the default `BASE_URL` and `PORT`. In the client these ofcourse need to correspond with those of the server.
+
+## Bugs
+
+Please feel free to send me a mail or make a PR, if you see something that I might have overlooked.
