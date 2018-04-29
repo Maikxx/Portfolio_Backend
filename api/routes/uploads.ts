@@ -11,7 +11,7 @@ router.get('/:imageFileName', auth.checkAuth, (req: express.Request, res: expres
 
     fs.readFile(filePath, 'base64', (error: object, base64String: string) => {
         if (error) {
-            return res.status(500).json({
+            res.status(500).json({
                 message: 'Something went wrong inside the server!',
             })
         } else {
