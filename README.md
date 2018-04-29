@@ -53,6 +53,6 @@ Please keep in mind that this version is not very optimized in terms of image si
 
 Also make sure to check the front-end code, in case you are not using the default `BASE_URL` and `PORT`. In the client these ofcourse need to correspond with those of the server.
 
-## Bugs
+## Bugs & issues
 
 Please feel free to send me a mail or make a PR, if you see something that I might have overlooked.
