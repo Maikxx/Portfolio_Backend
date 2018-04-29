@@ -4,6 +4,7 @@ import * as path from 'path'
 import * as auth from '../auth/check-auth'
 const router = express.Router()
 
+// This is a route where the front-end communicates with to get the images in base64 strings.
 router.get('/:imageFileName', auth.checkAuth, (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const fileName = req.params.imageFileName
     const filePath = path.resolve(`uploads/${fileName}`)
