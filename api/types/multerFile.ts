@@ -1,6 +1,6 @@
 export interface MulterFile {
-    key: string // Available using `S3`.
-    path: string // Available using `DiskStorage`.
+    key: string
+    path: string
     mimetype: string
     originalname: string
     destination: string
