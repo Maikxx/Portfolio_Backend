@@ -17,3 +17,14 @@ You will need to set the variables in the `.env` file to valid values:
 * BASE_URL - URL where you want to serve this application, like `http://localhost:`
 * PORT - port where you want to serve this application, like `8000`
 * JWT_KEY - a random value of your choosing, to work as the mixer of the JWT
+
+You will also need to create a file called `nodemon.json` in the root of this project (at the level of the `tslint.json` file).
+
+The contents of this file need to be:
+```json
+{
+    "env": {
+        "NODE_ENV": "development"
+    }
+}
+```
