@@ -9,7 +9,7 @@ git clone git@github.com:Maikxx/Portfolio_Backend.git
 cd Portfolio_Backend
 ```
 
-Here you will need to copy (on mac - OPT + Drag) the `.env.example` file and rename it to `.env`.
+At this point you will need to copy (on mac - OPT + Drag) the `.env.example` file and rename it to `.env`.
 You will need to set the variables in the `.env` file to valid values:
 * MONGO\_ATLAS\_NAME - needs to be equal to the name of your Mongo Atlas username
 * MONGO\_ATLAS\_PW - needs to be equal to the name of your Mongo Atlas user password
