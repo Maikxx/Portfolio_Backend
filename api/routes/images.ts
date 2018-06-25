@@ -35,9 +35,7 @@ const storage = multer.diskStorage({
 
 // Function which filters out the passable filetypes.
 const fileFilter = (request: express.Request, file: FileType, callback: any) => {
-    const {
-        mimetype,
-    } = file
+    const { mimetype } = file
 
     // Check if the mimetype of the passed file matches, what the API accepts.
     // If it does, continue the flow, else stop the flow and eventually throw an error.
