@@ -22,9 +22,7 @@ const storage = multer.diskStorage({
         callback(null, 'uploads/')
     },
     filename: (request: express.Request, file: FileType, callback: any) => {
-        const {
-            originalname,
-        } = file
+        const { originalname } = file
 
         // Create a good filename to save, by checking if there is a space in the file and replacing it with an underscore.
         // Then paste the date of creation before it with an underscore and continue the process in the callback.
