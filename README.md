@@ -56,3 +56,7 @@ Also make sure to check the front-end code, in case you are not using the defaul
 ## Bugs & issues
 
 Please feel free to send me a mail or make a PR, if you see something that I might have overlooked.
+
+## License
+
+This project is licensed as [MIT](LICENSE) by [Maikel van Veen](https://github.com/Maikxx).
